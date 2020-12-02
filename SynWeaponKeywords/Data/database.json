@@ -80,6 +80,18 @@
             "outputDescription": "a spear",
             "animation": "TwoHandSword"
         },
+        "Javelin": {
+            "keyword": "WeapTypeJavelin",
+            "akeywords": [],
+            "commonNames": [
+                "javelin"
+            ],
+            "exclude": [
+
+            ],
+            "outputDescription": "a javelin",
+            "animation": null
+        },
         "Halberd": {
             "keyword": "WeapTypeHalberd",
             "akeywords":[],
@@ -121,17 +133,44 @@
             "outputDescription": "a katana",
             "animation": null
         },
-        "Scimitar": {
-            "keyword":"WeapTypeCurvedSword",
+        "Claw": {
+            "keyword": "WeapTypeClaw",
             "akeywords":[],
             "commonNames": [
-                "scimitar",
-                "changdao",
-                "dadao",
-                "cutlass"
+                "claw"
             ],
             "exclude": [],
-            "outputDescription": "a curved sword",
+            "outputDescription": "a claw",
+            "animation": null
+        },
+        "Gun": {
+            "keyword":"WeapTypeGun",
+            "akeywords":[],
+            "commonNames": [
+                "gun"
+            ],
+            "exclude": [],
+            "outputDescription": "a gun",
+            "animation": null
+        },
+        "Scythe": {
+            "keyword": "WeapTypeScythe",
+            "akeywords":[],
+            "commonNames": [
+                "scythe"
+            ],
+            "exclude": [],
+            "outputDescription": "a scythe",
+            "animation": null
+        },
+        "Whip": {
+            "keyword": "WeapTypeWhip",
+            "akeywords":[],
+            "commonNames": [
+                "whip"
+            ],
+            "exclude": [],
+            "outputDescription": "a whip",
             "animation": null
         },
         "Unarmed": {
@@ -143,9 +182,7 @@
                 "battlestaff",
                 "shortstaff",
                 "short staff",
-                "claw",
-                "cetsus",
-                "whip"
+                "cetsus"
             ],
             "exclude": [],
             "outputDescription": "a monk weapon",

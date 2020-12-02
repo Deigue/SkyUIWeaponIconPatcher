@@ -60,13 +60,12 @@ namespace WeaponKeywords
                     .ToArray();
                 var globalExcludes = database.excludes.phrases.Any(ph => nameToTest?.Contains(ph) ?? false) ||
                                      database.excludes.weapons.Contains(edid);
-                //database.DB.Any(kv => kv.Value.exclude.Any(cn => nameToTest?.Contains(cn) ?? false));
 
                 if (database.includes.ContainsKey(edid ?? ""))
                 {
-                    var nw = state.PatchMod.Weapons.GetOrAddAsOverride(weapon);
                     if (formkeys.ContainsKey(database.includes[edid ?? ""]))
                     {
+                        var nw = state.PatchMod.Weapons.GetOrAddAsOverride(weapon);
                         nw.Keywords?.Add(formkeys[database.includes[edid ?? ""]]);
                         Console.WriteLine(
                             $"{nameToTest} is {database.DB[database.includes[edid ?? ""]].outputDescription}, adding {database.includes[edid ?? ""]} from {formkeys[database.includes[edid ?? ""]].ModKey}");
@@ -80,7 +79,8 @@ namespace WeaponKeywords
 
                 if (matchingKeywords.Length <= 0 || globalExcludes) continue;
 
-                if (!matchingKeywords.All(kd => weapon.Keywords?.Contains(formkeys.GetValueOrDefault(kd)) ?? false))
+                if (!matchingKeywords.All(weaponType =>
+                    weapon.Keywords?.Contains(formkeys.GetValueOrDefault(weaponType)) ?? false))
                 {
                     var nw = state.PatchMod.Weapons.GetOrAddAsOverride(weapon);
 
@@ -123,9 +123,9 @@ namespace WeaponKeywords
                         }
 
                         if (alternativekeys[kyd].Count <= 0) continue;
-                        var nw = state.PatchMod.Weapons.GetOrAddAsOverride(weapon);
                         foreach (var alt in alternativekeys[kyd])
                         {
+                            var nw = state.PatchMod.Weapons.GetOrAddAsOverride(weapon);
                             nw.Keywords?.Add(alt);
                             Console.WriteLine(
                                 $"{nameToTest} is {database.DB[kyd].outputDescription}, adding extra keyword from {alt.ModKey}");
