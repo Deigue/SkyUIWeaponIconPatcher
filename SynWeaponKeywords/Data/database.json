@@ -12,7 +12,10 @@
             "DLC1StaffFalmerIceSpike",
             "PIKeeperLongMace",
             "PIKeeperLongMaceNoEnch",
-            "N78DezicrahWeaponBow"
+            "N78DezicrahWeaponBow",
+            "PIKematuSword",
+            "PIKematuSwordNoEnch",
+            "JSwordsGungnir"
         ]
     },
     "includes": {
@@ -35,8 +38,7 @@
         "FollowerJavelin": "Pike",
         "CrucifixOfTheMadKing": "Halberd",
         "ImmolationTinder": "Halberd",
-        "PIKematuSword": "Scimitar",
-        "PIKematuSwordNoEnch": "Scimitar",
+        
         "ShAkaviriDagger": "Katana",
         "ShAkaviriShortsword": "Katana",
         "PIBladesSword": "Katana",
