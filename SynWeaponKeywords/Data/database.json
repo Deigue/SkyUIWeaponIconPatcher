@@ -36,7 +36,11 @@
         "CrucifixOfTheMadKing": "Halberd",
         "ImmolationTinder": "Halberd",
         "PIKematuSword": "Scimitar",
-        "PIKematuSwordNoEnch": "Scimitar"
+        "PIKematuSwordNoEnch": "Scimitar",
+        "ShAkaviriDagger": "Katana",
+        "ShAkaviriShortsword": "Katana",
+        "PIBladesSword": "Katana",
+        "PIBladesSwordNoEnch": "Katana"
     },
     "DB": {
         "Rapier": {
@@ -44,7 +48,6 @@
             "akeywords": [],
             "commonNames": [
                 "rapier",
-                "shortspear",
                 "saber"
             ],
             "exclude": [],
