@@ -55,15 +55,26 @@
             "keyword": "WeapTypePike",
             "akeywords": [],
             "commonNames": [
+                "pike"
+            ],
+            "exclude": [
+                "shortspear"
+            ],
+            "outputDescription": "a pike",
+            "animation": "TwoHandSword"
+        },
+        "Spear": {
+            "keyword": "WeapTypeSpear",
+            "akeywords": [],
+            "commonNames": [
                 "spear",
-                "pike",
                 "glaive",
                 "trident"
             ],
             "exclude": [
                 "shortspear"
             ],
-            "outputDescription": "a spear/pike",
+            "outputDescription": "a spear",
             "animation": "TwoHandSword"
         },
         "Halberd": {
