@@ -54,7 +54,7 @@ namespace WeaponKeywords
             {
                 var edid = weapon.EditorID;
                 var nameToTest = weapon.Name?.String?.ToLower();
-                var kyds = database.DB.Where(kv =>
+                var matchingKeywords = database.DB.Where(kv =>
                         kv.Value.commonNames.Any(cn => nameToTest?.Contains(cn) ?? false))
                     .Select(kd => kd.Key)
                     .ToArray();
@@ -78,58 +78,57 @@ namespace WeaponKeywords
                     }
                 }
 
-                if (kyds.Length > 0 && !globalExcludes)
+                if (matchingKeywords.Length <= 0 || globalExcludes) continue;
+
+                if (!matchingKeywords.All(kd => weapon.Keywords?.Contains(formkeys.GetValueOrDefault(kd)) ?? false))
                 {
-                    if (!kyds.All(kd => weapon.Keywords?.Contains(formkeys.GetValueOrDefault(kd)) ?? false))
+                    var nw = state.PatchMod.Weapons.GetOrAddAsOverride(weapon);
+
+                    foreach (var kyd in matchingKeywords)
                     {
-                        var nw = state.PatchMod.Weapons.GetOrAddAsOverride(weapon);
-                        foreach (var kyd in kyds)
+                        if (formkeys.ContainsKey(kyd) && !(nw.Keywords?.Contains(formkeys[kyd]) ?? false) &&
+                            !database.DB[kyd].exclude.Any(cn => nameToTest?.Contains(cn) ?? false))
                         {
-                            if (formkeys.ContainsKey(kyd) && !(nw.Keywords?.Contains(formkeys[kyd]) ?? false))
-                            {
-                                nw.Keywords?.Add(formkeys[kyd]);
-                                Console.WriteLine(
-                                    $"{nameToTest} is {database.DB[kyd].outputDescription}, adding {kyd} from {formkeys[kyd].ModKey}");
-                            }
+                            nw.Keywords?.Add(formkeys[kyd]);
+                            Console.WriteLine(
+                                $"{nameToTest} is {database.DB[kyd].outputDescription}, adding {kyd} from {formkeys[kyd].ModKey}");
                         }
                     }
+                }
 
-                    foreach (var kyd in kyds)
+                foreach (var kyd in matchingKeywords)
+                {
+                    if (!matchingKeywords.All(kyd => database.DB[kyd].akeywords?.Length > 0))
                     {
-                        if (!kyds.All(kyd => database.DB[kyd].akeywords?.Length > 0))
+                        if (!alternativekeys.ContainsKey(kyd))
                         {
-                            if (!alternativekeys.ContainsKey(kyd))
+                            alternativekeys[kyd] = new List<FormKey>();
+                            foreach (var keywd in database.DB[kyd].akeywords)
                             {
-                                alternativekeys[kyd] = new List<FormKey>();
-                                foreach (var keywd in database.DB[kyd].akeywords)
+                                var test = state.LoadOrder.PriorityOrder.Keyword().WinningOverrides()
+                                    .Where(kywd => ((kywd.EditorID ?? "") == keywd)).FirstOrDefault();
+                                if (test != null)
                                 {
-                                    var test = state.LoadOrder.PriorityOrder.Keyword().WinningOverrides()
-                                        .Where(kywd => ((kywd.EditorID ?? "") == keywd)).FirstOrDefault();
-                                    if (test != null)
-                                    {
-                                        Console.WriteLine(
-                                            $"Alternative Keyword found using {test.FormKey.ModKey} for {kyd}");
-                                        alternativekeys[kyd].Add(test.FormKey);
-                                    }
-                                    else
-                                    {
-                                        Console.WriteLine(
-                                            $"Alternative Keyword not found generating {keywd} for {kyd}");
-                                        alternativekeys[kyd].Add(state.PatchMod.Keywords.AddNew(keywd).FormKey);
-                                    }
-                                }
-                            }
-
-                            if (alternativekeys[kyd].Count > 0)
-                            {
-                                var nw = state.PatchMod.Weapons.GetOrAddAsOverride(weapon);
-                                foreach (var alt in alternativekeys[kyd])
-                                {
-                                    nw.Keywords?.Add(alt);
                                     Console.WriteLine(
-                                        $"{nameToTest} is {database.DB[kyd].outputDescription}, adding extra keyword from {alt.ModKey}");
+                                        $"Alternative Keyword found using {test.FormKey.ModKey} for {kyd}");
+                                    alternativekeys[kyd].Add(test.FormKey);
+                                }
+                                else
+                                {
+                                    Console.WriteLine(
+                                        $"Alternative Keyword not found generating {keywd} for {kyd}");
+                                    alternativekeys[kyd].Add(state.PatchMod.Keywords.AddNew(keywd).FormKey);
                                 }
                             }
+                        }
+
+                        if (alternativekeys[kyd].Count <= 0) continue;
+                        var nw = state.PatchMod.Weapons.GetOrAddAsOverride(weapon);
+                        foreach (var alt in alternativekeys[kyd])
+                        {
+                            nw.Keywords?.Add(alt);
+                            Console.WriteLine(
+                                $"{nameToTest} is {database.DB[kyd].outputDescription}, adding extra keyword from {alt.ModKey}");
                         }
                     }
                 }
