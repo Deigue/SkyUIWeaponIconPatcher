@@ -10,7 +10,7 @@ using Newtonsoft.Json.Linq;
 
 namespace WeaponKeywords
 {
-    public class Program
+    public static class Program
     {
         public static int Main(string[] args)
         {
@@ -28,22 +28,25 @@ namespace WeaponKeywords
                 });
         }
 
-        public static void RunPatch(SynthesisState<ISkyrimMod, ISkyrimModGetter> state)
+        private static void RunPatch(SynthesisState<ISkyrimMod, ISkyrimModGetter> state)
         {
             var database = JObject.Parse(File.ReadAllText(Path.Combine(state.ExtraSettingsDataPath, "database.json"))).ToObject<Database>();
             Dictionary<string, FormKey> formkeys = new Dictionary<string, FormKey>();
             Dictionary<string, List<FormKey>> alternativekeys = new Dictionary<string, List<FormKey>>();
-            foreach(var item in database.DB) {
-                foreach(var src in database.sources) {
-                    if(item.Value.keyword!=null) {
-                        var keyword  = state.LoadOrder.PriorityOrder.Keyword().WinningOverrides().Where(kywd => ((kywd.FormKey.ModKey.Equals(src))&&((kywd.EditorID?.ToString()??"")==item.Value.keyword))).FirstOrDefault();
-                        if(keyword != null && !formkeys.ContainsKey(item.Key)) {
-                            formkeys[item.Key] = keyword.FormKey;
-                            break;
-                        }
-                    }
+            foreach(var (key, value) in database.DB) {
+                foreach(var src in database.sources)
+                {
+                    if (value.keyword == null) continue;
+                    var keyword  = state.LoadOrder.PriorityOrder.Keyword()
+                        .WinningOverrides()
+                        .FirstOrDefault(kywd => 
+                            ((kywd.FormKey.ModKey.Equals(src)) && ((kywd.EditorID?.ToString()??"") == value.keyword)));
+                    if (keyword == null || formkeys.ContainsKey(key)) continue;
+                    formkeys[key] = keyword.FormKey;
+                    break;
                 }
             }
+            
             foreach(var weapon in state.LoadOrder.PriorityOrder.Weapon().WinningOverrides()) {
                 var edid = weapon.EditorID;
                 var nameToTest = weapon.Name?.String?.ToLower();

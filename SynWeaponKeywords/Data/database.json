@@ -72,7 +72,7 @@
                 "trident"
             ],
             "exclude": [
-                "shortspear"
+                
             ],
             "outputDescription": "a spear",
             "animation": "TwoHandSword"
